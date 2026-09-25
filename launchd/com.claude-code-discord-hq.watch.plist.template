@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  LaunchAgent that runs one watchdog pass (`discord-hq watch`) every 2 minutes.
+  install.sh fills in the placeholders (PYTHON, LOG_DIR) and writes the result to
+  ~/Library/LaunchAgents/com.claude-code-discord-hq.watch.plist.
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.claude-code-discord-hq.watch</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>__PYTHON__</string>
+		<string>-m</string>
+		<string>discord_hq</string>
+		<string>watch</string>
+	</array>
+	<key>StartInterval</key>
+	<integer>120</integer>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+	<key>StandardOutPath</key>
+	<string>__LOG_DIR__/claude-code-discord-hq.watch.out.log</string>
+	<key>StandardErrorPath</key>
+	<string>__LOG_DIR__/claude-code-discord-hq.watch.err.log</string>
+</dict>
+</plist>

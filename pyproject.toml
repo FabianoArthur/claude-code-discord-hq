@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claude-code-discord-hq"
+version = "0.1.0"
+description = "Discord server as code plus Claude Code notifications: run your AI coding sessions from your phone."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Fabiano Arthur" }]
+requires-python = ">=3.11"
+dependencies = [
+  "requests>=2.31,<3",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Communications :: Chat",
+  "Topic :: Software Development",
+]
+
+[project.optional-dependencies]
+icon = ["pillow>=10"]
+dev = ["pytest>=8", "ruff>=0.6", "pillow>=10"]
+
+[project.scripts]
+discord-hq = "discord_hq.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = [
+  "S603", # subprocess without shell=True is the safe form; inputs are fixed argv lists
+  "S607", # tmux/gh/git/osascript are resolved from PATH on purpose
+  "S110", # hooks and sinks swallow errors by contract: they must never break a Claude Code session
+  "S112",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "S108", "B011"]

@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest an idea or an improvement.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: How could this project help? Design-format changes are welcome, but keep the validator strict.
+  - type: textarea
+    id: security
+    attributes:
+      label: Security impact
+      description: Does this give a bot, a guest or a message more power? How is that contained?

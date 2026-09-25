@@ -1,0 +1,34 @@
+name: Bug report
+description: Something doesn't work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste tokens, webhook URLs, `.env` contents or real server/user ids.**
+        For security problems, use the repository's Security tab → *Report a vulnerability* instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: Minimal steps. A trimmed design file helps a lot (with fake names and ids).
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `discord-hq --version`
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, tmux version, Claude Code version

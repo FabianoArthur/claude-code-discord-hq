@@ -1,0 +1,27 @@
+# Secrets and generated state: never commit
+.env
+*.env
+!.env.example
+webhooks.json
+state.json
+*.state.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Local tooling
+.worktrees/
+.kitchen/
+.orq/
+.claude/
+.DS_Store
+
+# Your own server design, if you keep it inside the clone
+design.toml

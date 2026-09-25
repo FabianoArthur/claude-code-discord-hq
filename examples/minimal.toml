@@ -1,0 +1,41 @@
+# Minimal design: one private category where you and your waiter bot talk,
+# plus two webhook channels for Claude Code notifications.
+#
+#   discord-hq plan  --design examples/minimal.toml
+#   discord-hq apply --design examples/minimal.toml
+#
+# Full reference: docs/design-format.md
+
+[[roles]]
+name = "👑 Chef"          # you: the server owner
+color = "#F1C40F"
+hoist = true
+assign_to = "owner"
+
+[[roles]]
+name = "🤵 Waiter"        # the bot your main Claude Code session talks through
+color = "#1ABC9C"
+hoist = true
+assign_to = "bot:WaiterBot" # the name Discord gave the bot's own role when you invited it
+
+[[categories]]
+name = "🛎️ COUNTER"
+visible_to = ["👑 Chef", "🤵 Waiter"] # @everyone never sees managed categories
+
+  [[categories.channels]]
+  name = "table"
+  type = "text"
+  topic = "Talk to the waiter."
+  answered_by = { waiter = "always" }
+
+  [[categories.channels]]
+  name = "served"
+  type = "text"
+  topic = "Finished work, with the PR link."
+  webhook = "Pass"
+
+  [[categories.channels]]
+  name = "alerts"
+  type = "text"
+  topic = "Sessions that need you."
+  webhook = "Bell"
