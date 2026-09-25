@@ -1,0 +1,20 @@
+# Keeps the pinned CI actions (by commit SHA) and the Python dependency
+# ranges in pyproject.toml current. Every update arrives as a PR and has to
+# pass CI (tests, lint, shellcheck, gitleaks) like any other change.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      python:
+        patterns: ["*"]

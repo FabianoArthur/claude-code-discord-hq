@@ -10,6 +10,10 @@ readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Fabiano Arthur" }]
 requires-python = ">=3.11"
+# Ranges, not hash pins: this is a library-style tool installed into the
+# user's own environment, so exact pins would fight their other packages.
+# Upper bounds stop an unreviewed major version; Dependabot proposes bumps.
+# CI installs these with no secrets and a read-only token.
 dependencies = [
   "requests>=2.31,<3",
 ]
@@ -26,8 +30,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-icon = ["pillow>=10"]
-dev = ["pytest>=8", "ruff>=0.6", "pillow>=10"]
+icon = ["pillow>=10,<13"]
+dev = ["pytest>=8,<10", "ruff>=0.6,<0.17", "pillow>=10,<13"]
 
 [project.scripts]
 discord-hq = "discord_hq.cli:main"

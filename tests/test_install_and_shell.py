@@ -113,3 +113,64 @@ def test_waiter_shortcut_on_an_isolated_tmux_socket():
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "all waiter tests passed" in result.stdout
+
+
+def test_never_writes_settings_through_a_symlink(tmp_path):
+    # A dangling symlink at the .env path must not be followed: cp would
+    # otherwise create (or clobber) whatever file it points at.
+    config = tmp_path / ".config" / "claude-code-discord-hq"
+    config.mkdir(parents=True)
+    outside = tmp_path / "outside.txt"
+    (config / ".env").symlink_to(outside)
+    result = _install(tmp_path, "--yes", "--no-venv", "--no-load")
+    assert result.returncode != 0
+    assert "symlink" in result.stderr
+    assert not outside.exists()
+
+
+def test_refuses_a_repo_path_that_would_break_quoting(tmp_path):
+    # The repo path is pasted into sed, the plist (XML) and the hook JSON.
+    repo = tmp_path / 'we"ird&dir'
+    (repo / "launchd").mkdir(parents=True)
+    shutil.copy(REPO / "install.sh", repo / "install.sh")
+    shutil.copy(REPO / ".env.example", repo / ".env.example")
+    shutil.copy(TEMPLATE, repo / "launchd" / TEMPLATE.name)
+    home = tmp_path / "home"
+    home.mkdir()
+    env = {"HOME": str(home), "PATH": os.environ["PATH"]}
+    result = subprocess.run(
+        ["bash", str(repo / "install.sh"), "--yes", "--no-venv", "--no-load"],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=60,
+    )
+    assert result.returncode == 2
+    assert "unsafe character" in result.stderr
+    assert _files(home) == []
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="LaunchAgent is macOS only")
+def test_backs_up_a_different_launch_agent_before_replacing_it(tmp_path):
+    agent = tmp_path / "Library" / "LaunchAgents" / "com.claude-code-discord-hq.watch.plist"
+    agent.parent.mkdir(parents=True)
+    agent.write_text("<plist>edited by hand</plist>\n")
+    result = _install(tmp_path, "--yes", "--no-venv", "--no-load")
+    assert result.returncode == 0, result.stderr
+    backups = list(agent.parent.glob(agent.name + ".bak.*"))
+    assert len(backups) == 1
+    assert backups[0].read_text() == "<plist>edited by hand</plist>\n"
+    assert "__" not in agent.read_text()
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="LaunchAgent is macOS only")
+def test_never_writes_the_launch_agent_through_a_symlink(tmp_path):
+    agent = tmp_path / "Library" / "LaunchAgents" / "com.claude-code-discord-hq.watch.plist"
+    agent.parent.mkdir(parents=True)
+    outside = tmp_path / "outside.plist"
+    outside.write_text("keep me\n")
+    agent.symlink_to(outside)
+    result = _install(tmp_path, "--yes", "--no-venv", "--no-load")
+    assert result.returncode != 0
+    assert "symlink" in result.stderr
+    assert outside.read_text() == "keep me\n"

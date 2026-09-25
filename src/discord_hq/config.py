@@ -8,6 +8,7 @@ offending variable but never echo its value (it may be a secret).
 
 from __future__ import annotations
 
+import dataclasses
 import os
 import shlex
 from collections.abc import Mapping
@@ -48,7 +49,8 @@ class ConfigError(ValueError):
 class Settings:
     config_dir: Path
     claude_projects_dir: Path
-    admin_token: str | None = None
+    # repr=False: a traceback, a debugger or a stray print must not leak it.
+    admin_token: str | None = dataclasses.field(default=None, repr=False)
     guild_id: str | None = None
     design_path: Path | None = None
     state_path: Path | None = None

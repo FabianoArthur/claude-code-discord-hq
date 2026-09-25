@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Security
+
+- `install.sh` refuses to write through a symlink (`.env`, the LaunchAgent) and refuses repo/home paths whose characters would break the sed, plist or JSON quoting.
+- `install.sh` backs up a LaunchAgent that differs before replacing it.
+- `Settings` no longer shows the admin token in its `repr`.
+- Dependabot for GitHub Actions and pip; upper bounds on the optional and dev dependencies.
+- Threat model: how to run kitchens with `--dangerously-skip-permissions` safely (T15), and the installer's own threats (T14). `SECURITY.md` states the response timeline.
+
 ## [0.1.0] - 2026-09-25
 
 First public version.
