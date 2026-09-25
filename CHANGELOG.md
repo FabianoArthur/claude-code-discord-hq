@@ -6,7 +6,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Security
 
-- `install.sh` refuses to write through a symlink (`.env`, the LaunchAgent) and refuses repo/home paths whose characters would break the sed, plist or JSON quoting.
+- `install.sh` refuses to write through a dangling symlink at `.env` or any symlink at the LaunchAgent path, and refuses repo/home paths whose characters would break the sed, plist, JSON or shell quoting.
+- `discord-hq audit-forum` strips control characters from post names before printing them.
 - `install.sh` backs up a LaunchAgent that differs before replacing it.
 - `Settings` no longer shows the admin token in its `repr`.
 - Dependabot for GitHub Actions and pip; upper bounds on the optional and dev dependencies.

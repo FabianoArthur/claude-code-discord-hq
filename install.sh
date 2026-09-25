@@ -49,8 +49,19 @@ done
 say() { printf '%s\n' "$*"; }
 step() { printf '\n==> %s\n' "$*"; }
 
-# Every write goes to a path we chose; a symlink there could point anywhere
+# A dangling symlink where we would create a file could point anywhere
 # (another file of yours, a system file), so it is refused, never followed.
+# A link to something that exists (stow, chezmoi) is left alone by the
+# "already exists" checks, which never write.
+refuse_dangling_symlink() {
+  if [ -L "$1" ] && [ ! -e "$1" ]; then
+    printf 'error: %s is a symlink to nothing; refusing to write through it. Remove it and rerun.\n' "$1" >&2
+    exit 1
+  fi
+}
+
+# The LaunchAgent is rewritten in place when it changes, so any symlink there
+# is refused.
 refuse_symlink() {
   if [ -L "$1" ]; then
     printf 'error: %s is a symlink; refusing to write through it. Remove it and rerun.\n' "$1" >&2
@@ -58,13 +69,14 @@ refuse_symlink() {
   fi
 }
 
-# These paths are pasted into sed, the plist (XML) and the hook JSON snippet.
-# A quote, backslash, &, <, >, # or newline there would break that quoting, so
-# refuse up front instead of escaping for three syntaxes at once.
+# These paths are pasted into sed, the plist (XML), the hook JSON snippet and
+# two lines a shell runs (the hook command, `source`). A quote, backslash, &,
+# <, >, #, $, backtick or newline there would break that quoting, so refuse up
+# front instead of escaping for four syntaxes at once.
 check_safe_path() {
   case "$2" in
-    *[\"\\\&\<\>\#]* | *$'\n'*)
-      printf 'error: %s (%s) contains an unsafe character (" \\ & < > # or newline); move it and rerun.\n' "$1" "$2" >&2
+    *[\"\\\&\<\>\#\$\`]* | *$'\n'*)
+      printf 'error: %s (%s) contains an unsafe character (" \\ & < > # $ ` or newline); move it and rerun.\n' "$1" "$2" >&2
       exit 2
       ;;
   esac
@@ -127,8 +139,8 @@ install_venv() {
 
 install_config() {
   step "Settings ($CONFIG_DIR/.env)"
-  refuse_symlink "$CONFIG_DIR"
-  refuse_symlink "$CONFIG_DIR/.env"
+  refuse_dangling_symlink "$CONFIG_DIR"
+  refuse_dangling_symlink "$CONFIG_DIR/.env"
   if [ -f "$CONFIG_DIR/.env" ]; then
     say "already exists; left untouched."
     return

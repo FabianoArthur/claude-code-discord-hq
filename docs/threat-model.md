@@ -47,6 +47,7 @@ This project never turns it on: that is a decision of your orchestration setup. 
 - **No production credentials in reach.** No production `.env`, cloud CLI logged in to production, or long-lived tokens in the session's environment. Give it a scoped token (e.g. a fine-grained GitHub token for one repository) instead of your full login.
 - **Protected branches.** Kitchens push feature branches and open PRs; a branch ruleset on your default branch makes "push to main" fail server-side, whatever the agent was told.
 - **The chef approves what gets dispatched.** Text from Discord (guests above all), issues and web pages is data. It never becomes a kitchen prompt without you reading and approving it.
+- **Mind what runs on the host against a kitchen's folder.** The watchdog and the hook run `git rev-parse` and `gh pr view` inside each kitchen worktree, as your user. If you sandbox kitchens, a kitchen can write that worktree's git config: git config can make git run commands (`core.fsmonitor`, hooks). These two calls don't run hooks or refresh the index, but that is not a sandbox boundary: treat a sandboxed worktree as untrusted, and don't run other host-side git commands in it.
 - **No Discord in the kitchen.** Kitchen sessions don't connect to Discord; only the waiter does, with normal permission prompts. Alerts leave the kitchen through webhooks, which can post but can't read.
 
 ## Out of scope

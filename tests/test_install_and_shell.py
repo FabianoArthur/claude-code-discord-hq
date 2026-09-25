@@ -174,3 +174,37 @@ def test_never_writes_the_launch_agent_through_a_symlink(tmp_path):
     assert result.returncode != 0
     assert "symlink" in result.stderr
     assert outside.read_text() == "keep me\n"
+
+
+def test_keeps_a_symlinked_settings_file_that_exists(tmp_path):
+    # dotfiles managers (stow, chezmoi) link real files: that's "already exists".
+    config = tmp_path / ".config" / "claude-code-discord-hq"
+    config.mkdir(parents=True)
+    real = tmp_path / "dotfiles.env"
+    real.write_text("DISCORD_HQ_GUILD_ID=100000000000000001\n")
+    (config / ".env").symlink_to(real)
+    result = _install(tmp_path, "--yes", "--no-venv", "--no-load")
+    assert result.returncode == 0, result.stderr
+    assert "already exists" in result.stdout
+    assert real.read_text() == "DISCORD_HQ_GUILD_ID=100000000000000001\n"
+
+
+@pytest.mark.parametrize("char", ["$", "`"])
+def test_refuses_a_repo_path_with_shell_expansion_characters(tmp_path, char):
+    # The hook command and the `source` line are run by a shell.
+    repo = tmp_path / f"a{char}b"
+    (repo / "launchd").mkdir(parents=True)
+    shutil.copy(REPO / "install.sh", repo / "install.sh")
+    shutil.copy(REPO / ".env.example", repo / ".env.example")
+    shutil.copy(TEMPLATE, repo / "launchd" / TEMPLATE.name)
+    home = tmp_path / "home"
+    home.mkdir()
+    result = subprocess.run(
+        ["bash", str(repo / "install.sh"), "--yes", "--no-venv", "--no-load"],
+        capture_output=True,
+        text=True,
+        env={"HOME": str(home), "PATH": os.environ["PATH"]},
+        timeout=60,
+    )
+    assert result.returncode == 2
+    assert "unsafe character" in result.stderr

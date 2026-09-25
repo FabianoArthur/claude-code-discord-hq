@@ -43,6 +43,12 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _printable(text: str) -> str:
+    """Post names are typed by any server member: drop control characters
+    (terminal escapes, newlines) before they reach the terminal."""
+    return "".join(ch if ch.isprintable() else " " for ch in text)
+
+
 def _design_path(args, settings: Settings) -> Path:
     return args.design or settings.design_path or Path("design.toml")
 
@@ -109,6 +115,6 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(f"{result['total']} post(s) in {args.channel_id}:")
         for name in result["names"]:
-            print(f"- {name}")
+            print(f"- {_printable(name)}")
         return 0
     return 2
