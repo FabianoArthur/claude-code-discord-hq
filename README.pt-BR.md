@@ -65,6 +65,14 @@ O código, a CLI e as mensagens estão em inglês. A equivalência é esta:
 
 ## Como funciona
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/how-it-works.pt-BR-dark.svg">
+  <img src="docs/assets/how-it-works.pt-BR-light.svg" width="880" alt="Diagrama de como o claude-code-discord-hq funciona. Você conversa com um servidor Discord pelo celular ou desktop; o discord-hq apply transforma o design.toml nos cargos, canais, permissões e webhooks dele. Em #table e #orders, o bot (plugin oficial do Discord) leva suas mensagens à sessão garçom no tmux, que despacha o trabalho para as sessões de cozinha (tmux + git worktrees). O discord-hq hook e o discord-hq watch leem eventos do hook, telas do tmux, transcripts e manifestos da leva, publicam por webhooks, sem token de bot, em #served, #alerts e #panel, e também mostram uma notificação do macOS com o comando tmux attach no clipboard.">
+</picture>
+
+<details>
+<summary>Versão em texto</summary>
+
 ```
                  você (celular / desktop)
                           │
@@ -85,6 +93,8 @@ O código, a CLI e as mensagens estão em inglês. A equivalência é esta:
       │ (tmux + git worktrees)  │   e mais: notificação do macOS com o
       └─────────────────────────┘   comando tmux attach no clipboard
 ```
+
+</details>
 
 - **`discord-hq plan` / `apply`** usam um token temporário de bot admin. Os dois leem o servidor, calculam o diff e aplicam. O canal é identificado por (nome, tipo, categoria), nunca só pelo nome. As permissões são gravadas em cada canal, porque o Discord não propaga a permissão da categoria para os canais que já existem. Veja [docs/design-format.md](docs/design-format.md).
 - **`discord-hq hook`** roda nos eventos `Notification` e `Stop` do Claude Code. Ele só age dentro das sessões de cozinha, que reconhece pela pasta do git worktree ou pelo prefixo da sessão tmux.

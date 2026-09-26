@@ -43,6 +43,14 @@ You don't need the whole workflow. The server-as-code part works for any Discord
 
 ## How it works
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/how-it-works-dark.svg">
+  <img src="docs/assets/how-it-works-light.svg" width="880" alt="Diagram of how claude-code-discord-hq works. You talk to a Discord server from your phone or desktop; discord-hq apply turns design.toml into its roles, channels, permissions and webhooks. In #table and #orders, the bot (the official Discord plugin) relays your messages to the waiter session in tmux, which dispatches work to kitchen sessions (tmux + git worktrees). discord-hq hook and discord-hq watch read hook events, tmux screens, transcripts and batch manifests, then post through webhooks, with no bot token, to #served, #alerts and #panel, and also raise a macOS notification with the tmux attach command on the clipboard.">
+</picture>
+
+<details>
+<summary>Text version</summary>
+
 ```
                  you (phone / desktop)
                           │
@@ -63,6 +71,8 @@ You don't need the whole workflow. The server-as-code part works for any Discord
       │ (tmux + git worktrees)  │   also: macOS notification with the
       └─────────────────────────┘   tmux attach command on the clipboard
 ```
+
+</details>
 
 - **`discord-hq plan` / `apply`** use a temporary admin bot token. They read the server, compute a diff and apply it. Channels are matched by (name, type, category), never by name alone. Permission overwrites are written on every channel, because Discord doesn't propagate category permissions to existing channels. See [docs/design-format.md](docs/design-format.md).
 - **`discord-hq hook`** runs on Claude Code's `Notification` and `Stop` events. It only acts inside kitchen sessions, which it recognises by a git worktree folder or a tmux session prefix.
