@@ -14,7 +14,7 @@ import requests
 from discord_hq import __version__
 
 API_BASE = "https://discord.com/api/v10"
-USER_AGENT = f"DiscordBot (https://github.com/Fabiano-Arthur/claude-code-discord-hq, {__version__})"
+USER_AGENT = f"DiscordBot (https://github.com/FabianoArthur/claude-code-discord-hq, {__version__})"
 TIMEOUT_SECONDS = 15
 MAX_RATE_LIMIT_RETRIES = 10
 

@@ -32,5 +32,5 @@ First public version.
 - Documentation in English (plus `README.pt-BR.md`), security and threat models.
 - CI: tests, ruff, shellcheck and gitleaks, with actions pinned by SHA.
 
-[Unreleased]: https://github.com/Fabiano-Arthur/claude-code-discord-hq/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/Fabiano-Arthur/claude-code-discord-hq/releases/tag/v0.1.0
+[Unreleased]: https://github.com/FabianoArthur/claude-code-discord-hq/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/FabianoArthur/claude-code-discord-hq/releases/tag/v0.1.0

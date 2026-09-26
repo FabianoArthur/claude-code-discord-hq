@@ -4,7 +4,7 @@
 
 [Português (Brasil)](README.pt-BR.md) · [Design format](docs/design-format.md) · [Security model](docs/security-model.md) · [Threat model](docs/threat-model.md)
 
-[![CI](https://github.com/Fabiano-Arthur/claude-code-discord-hq/actions/workflows/ci.yml/badge.svg)](https://github.com/Fabiano-Arthur/claude-code-discord-hq/actions/workflows/ci.yml)
+[![CI](https://github.com/FabianoArthur/claude-code-discord-hq/actions/workflows/ci.yml/badge.svg)](https://github.com/FabianoArthur/claude-code-discord-hq/actions/workflows/ci.yml)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
@@ -88,7 +88,7 @@ Requirements: Python 3.11+, git, tmux, a Discord account. macOS gets native noti
 
 1. **Clone and install:**
    ```sh
-   git clone https://github.com/Fabiano-Arthur/claude-code-discord-hq.git
+   git clone https://github.com/FabianoArthur/claude-code-discord-hq.git
    cd claude-code-discord-hq
    ./install.sh --dry-run   # see what it would do
    ./install.sh             # asks before every write
