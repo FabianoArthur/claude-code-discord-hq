@@ -14,7 +14,11 @@ Report privately through GitHub: go to the repository's **Security** tab and cho
 - steps to reproduce, ideally against a throwaway Discord server;
 - the version (`discord-hq --version`) and your OS.
 
-You'll get an acknowledgement within 7 days. Fixes are released as soon as they are ready, with credit if you want it.
+This is a one-maintainer project, so the timeline is best effort:
+
+- acknowledgement within 7 days;
+- an assessment (confirmed or not, and how severe) within 14 days;
+- a fix or a documented mitigation for confirmed issues as soon as it is ready, usually within 30 days, published as a GitHub security advisory with credit if you want it.
 
 ## Never include secrets
 

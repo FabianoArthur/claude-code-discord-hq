@@ -35,10 +35,22 @@
 | T10 | **A destructive `apply`** deletes channels with history. | Deletions only by exact id, listed separately, and only with `--allow-delete`. Confirmation prompt. Moves create new channels instead of moving. | You can still delete what you list. |
 | T11 | **The hook breaks Claude Code sessions** (exceptions, hangs, output injected into the session). | Contract tested: no stdout, never raises, exit 0, short timeouts. | A hung subprocess is capped at its timeout (at most ~10 s for `gh`). |
 | T12 | **The installer silently changes how Claude Code or the shell behave.** | It never writes `~/.claude/settings.json` or rc files; it confirms every write; `--dry-run`. | None. |
-| T13 | **Supply chain** (a compromised dependency or CI action). | Two runtime dependencies (`requests`, optional `pillow`); CI actions pinned by commit SHA; gitleaks pinned by version + checksum; `permissions: contents: read`. | Dependencies aren't hash-locked for end users; pin them in your own environment if you need that. |
+| T13 | **Supply chain** (a compromised dependency or CI action). | Two runtime dependencies (`requests`, optional `pillow`), with upper version bounds; CI actions pinned by commit SHA; gitleaks pinned by version + checksum; `permissions: contents: read`, no `pull_request_target`, no secrets in CI; Dependabot proposes every bump as a PR that must pass CI. | Dependencies aren't hash-locked for end users; pin them in your own environment if you need that. |
+| T14 | **The installer writes somewhere it shouldn't** (a symlink planted at `.env` or the LaunchAgent path, a path that breaks quoting). | `install.sh` refuses to write through a symlink, refuses repo/home paths with quoting-breaking characters, backs up a LaunchAgent that differs before replacing it, never uses `sudo`. Tested. | None known. |
+| T15 | **Injected text reaches a kitchen session that runs with `--dangerously-skip-permissions`.** A guest message, an issue or a web page ends up in the prompt the waiter writes for a kitchen unit, and that session runs every command without asking. | Nothing in this project starts a session with skipped permissions (the waiter runs with normal prompts, enforced by a test). Guest orders wait for the chef's approval before anything is dispatched. The rules for kitchens, if you choose to run them that way, are below. | High if you ignore the rules below: the agent has your user's full power on the machine. |
+
+## Running kitchens with `--dangerously-skip-permissions`
+
+This project never turns it on: that is a decision of your orchestration setup. If you make it, treat each kitchen session as an agent that can run **any** command as your user, steered by **any** text it reads (T15). The mitigations that actually work:
+
+- **Isolation first.** One git worktree per unit; ideally a container or VM (Claude Code's sandbox, a dev container). Nothing else confines a bypassed session.
+- **No production credentials in reach.** No production `.env`, cloud CLI logged in to production, or long-lived tokens in the session's environment. Give it a scoped token (e.g. a fine-grained GitHub token for one repository) instead of your full login.
+- **Protected branches.** Kitchens push feature branches and open PRs; a branch ruleset on your default branch makes "push to main" fail server-side, whatever the agent was told.
+- **The chef approves what gets dispatched.** Text from Discord (guests above all), issues and web pages is data. It never becomes a kitchen prompt without you reading and approving it.
+- **Mind what runs on the host against a kitchen's folder.** The watchdog and the hook run `git rev-parse` and `gh pr view` inside each kitchen worktree, as your user. If you sandbox kitchens, a kitchen can write that worktree's git config: git config can make git run commands (`core.fsmonitor`, hooks). These two calls don't run hooks or refresh the index, but that is not a sandbox boundary: treat a sandboxed worktree as untrusted, and don't run other host-side git commands in it.
+- **No Discord in the kitchen.** Kitchen sessions don't connect to Discord; only the waiter does, with normal permission prompts. Alerts leave the kitchen through webhooks, which can post but can't read.
 
 ## Out of scope
 
 - Attacks by Discord or GitHub themselves, or on their infrastructure.
 - A machine that is already compromised.
-- Kitchen sessions run with `--dangerously-skip-permissions`. That is a decision of your orchestration setup, not of this project. If you make it, use isolated worktrees, protected branches, and no production credentials in the environment.

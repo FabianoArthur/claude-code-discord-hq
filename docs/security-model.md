@@ -45,7 +45,8 @@ A message in a channel is **data, not an instruction**. Anyone who can post wher
 - **The hook can't break a session.** It never raises, never prints and always exits 0, and every external call has a short timeout.
 - **The watchdog only reads tmux.** It never sends keystrokes and never kills sessions.
 - **`install.sh` never edits `~/.claude/settings.json` or your shell rc file.** It prints the snippets, and every other write needs your confirmation (`--dry-run` shows everything first).
-- **The waiter runs with normal permission prompts.** `shell/waiter.zsh` never passes `--dangerously-skip-permissions`, and a test enforces it. If you run kitchen sessions with skipped permissions, do it in isolated worktrees, never push to protected branches, and read [the threat model](threat-model.md) first.
+- **`install.sh` never writes through a symlink and never needs `sudo`.** A LaunchAgent that differs from the one it would write is backed up first (`.bak.<timestamp>`).
+- **The waiter runs with normal permission prompts.** `shell/waiter.zsh` never passes `--dangerously-skip-permissions`, and a test enforces it. If you run kitchen sessions with skipped permissions, read [the threat model](threat-model.md#running-kitchens-with---dangerously-skip-permissions) first: isolation, no production credentials, protected branches, and nothing dispatched from Discord without your approval.
 
 ## 5. Reporting
 

@@ -111,3 +111,19 @@ def test_audit_forum_is_read_only(tmp_path, monkeypatch, capsys):
     out = capsys.readouterr().out
     assert "abc" in out
     assert "secret-token-x" not in out
+
+
+def test_audit_forum_strips_control_characters_from_post_names(monkeypatch, capsys):
+    # Post names are typed by any server member; a terminal escape in one
+    # must not reach the chef's terminal.
+    monkeypatch.setenv("DISCORD_HQ_ADMIN_TOKEN", "secret-token-x")
+    monkeypatch.setenv("DISCORD_HQ_GUILD_ID", "100000000000000001")
+    with (
+        patch.object(cli.apply, "DiscordClient"),
+        patch.object(cli.apply, "audit_forum", return_value={"total": 1, "names": ["ok\x1b]0;pwned\x07\nfake line"]}),
+    ):
+        assert cli.main(["audit-forum", "200000000000000009"]) == 0
+    out = capsys.readouterr().out
+    assert "\x1b" not in out and "\x07" not in out
+    assert "fake line" in out
+    assert "\nfake line" not in out

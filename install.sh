@@ -49,6 +49,39 @@ done
 say() { printf '%s\n' "$*"; }
 step() { printf '\n==> %s\n' "$*"; }
 
+# A dangling symlink where we would create a file could point anywhere
+# (another file of yours, a system file), so it is refused, never followed.
+# A link to something that exists (stow, chezmoi) is left alone by the
+# "already exists" checks, which never write.
+refuse_dangling_symlink() {
+  if [ -L "$1" ] && [ ! -e "$1" ]; then
+    printf 'error: %s is a symlink to nothing; refusing to write through it. Remove it and rerun.\n' "$1" >&2
+    exit 1
+  fi
+}
+
+# The LaunchAgent is rewritten in place when it changes, so any symlink there
+# is refused.
+refuse_symlink() {
+  if [ -L "$1" ]; then
+    printf 'error: %s is a symlink; refusing to write through it. Remove it and rerun.\n' "$1" >&2
+    exit 1
+  fi
+}
+
+# These paths are pasted into sed, the plist (XML), the hook JSON snippet and
+# two lines a shell runs (the hook command, `source`). A quote, backslash, &,
+# <, >, #, $, backtick or newline there would break that quoting, so refuse up
+# front instead of escaping for four syntaxes at once.
+check_safe_path() {
+  case "$2" in
+    *[\"\\\&\<\>\#\$\`]* | *$'\n'*)
+      printf 'error: %s (%s) contains an unsafe character (" \\ & < > # $ ` or newline); move it and rerun.\n' "$1" "$2" >&2
+      exit 2
+      ;;
+  esac
+}
+
 # confirm "question": 0 = go ahead, 1 = skip. Dry runs never go ahead.
 confirm() {
   if [ "$DRY_RUN" -eq 1 ]; then
@@ -106,6 +139,8 @@ install_venv() {
 
 install_config() {
   step "Settings ($CONFIG_DIR/.env)"
+  refuse_dangling_symlink "$CONFIG_DIR"
+  refuse_dangling_symlink "$CONFIG_DIR/.env"
   if [ -f "$CONFIG_DIR/.env" ]; then
     say "already exists; left untouched."
     return
@@ -132,12 +167,19 @@ install_watchdog() {
     say "*/2 * * * * $PYTHON_IN_VENV -m discord_hq watch >/dev/null 2>&1"
     return
   fi
-  local rendered
+  local rendered backup
+  refuse_symlink "$AGENT"
   rendered="$(render_agent)"
   if [ -f "$AGENT" ] && [ "$(cat "$AGENT")" = "$rendered" ]; then
     say "LaunchAgent already up to date ($AGENT)."
   elif confirm "write the LaunchAgent to $AGENT"; then
     mkdir -p "$AGENT_DIR"
+    if [ -f "$AGENT" ]; then
+      # Someone (maybe you) changed it: keep their version next to it.
+      backup="$AGENT.bak.$(date +%Y%m%d%H%M%S)"
+      cp -p "$AGENT" "$backup"
+      say "previous LaunchAgent saved as $backup"
+    fi
     printf '%s\n' "$rendered" >"$AGENT"
     say "written."
   else
@@ -201,6 +243,9 @@ uninstall() {
   say "- the hooks in ~/.claude/settings.json and the 'source' line in ~/.zshrc"
   say "- the Discord side: delete the webhooks and reset or delete the bot tokens"
 }
+
+check_safe_path "repo path" "$REPO"
+check_safe_path "HOME" "$HOME"
 
 if [ "$UNINSTALL" -eq 1 ]; then
   uninstall

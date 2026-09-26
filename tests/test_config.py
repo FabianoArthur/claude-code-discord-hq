@@ -139,3 +139,11 @@ def test_env_example_documents_every_setting():
     example = (Path(__file__).resolve().parents[1] / ".env.example").read_text()
     for variable in config.ENV_VARS.values():
         assert variable in example, f"{variable} is not documented in .env.example"
+
+
+def test_repr_never_shows_the_admin_token(tmp_path):
+    # A traceback, a debugger or a stray print(settings) must not leak it.
+    settings = config.load_settings({"HOME": str(tmp_path), "DISCORD_HQ_ADMIN_TOKEN": "secret-token-x"})
+    assert settings.admin_token == "secret-token-x"
+    assert "secret-token-x" not in repr(settings)
+    assert "secret-token-x" not in str(settings)
