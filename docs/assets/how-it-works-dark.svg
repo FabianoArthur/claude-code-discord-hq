@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 572" width="880" height="572" role="img" aria-labelledby="title desc" lang="en">
+<title id="title">How claude-code-discord-hq works</title>
+<desc id="desc">You talk to a Discord server from your phone or desktop. discord-hq apply turns design.toml into the server's roles, channels, permissions and webhooks. In #table (talk) and #orders (forums), the bot (the official Discord plugin) relays your messages to the waiter session (tmux: waiter), which dispatches work to kitchen sessions kitchen-a, kitchen-b and so on (tmux + git worktrees). discord-hq hook (on Notification and Stop) and discord-hq watch (every 2 minutes) read hook events, tmux screens, transcripts and batch manifests, and post through webhooks, with no bot token, to #served, #alerts and #panel (the live board). They also raise a macOS notification with the tmux attach command on the clipboard.</desc>
+<style>
+text{font-family:ui-sans-serif, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Helvetica, Arial, sans-serif;fill:#e6edf3}
+.t{font-size:14px}
+.b{font-size:14px;font-weight:600}
+.h{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.m{font-size:12.5px;fill:#9198a1}
+.mb{font-size:12.5px;font-weight:600}
+.code{font-family:ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace;font-size:13px}
+.ch{font-family:ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace;font-size:13px}
+.hash{fill:#8f99ff}
+.bg{fill:#161b22;stroke:#30363d}
+.card{fill:#0d1117;stroke:#3d444d}
+.chip{fill:#0d1117;stroke:#3a4386}
+.kchip{fill:#0d1117;stroke:#3d444d}
+.dz{fill:#1b2040;stroke:#3a4386}
+.dzt{fill:#aab2ff}
+.mz{fill:#1c2128;stroke:#30363d}
+.kz{fill:none;stroke:#545d68;stroke-dasharray:5 4}
+.e{fill:none;stroke:#6e7681;stroke-width:1.5;stroke-linejoin:round}
+.sep{stroke:#3d444d}
+.dot{fill:#fb923c}
+.halo{fill:#fb923c;opacity:.25}
+.hl{fill:none;stroke:#fb923c;stroke-width:2;stroke-linejoin:round}
+.kglow{fill:none;stroke:#fb923c;stroke-width:1.5}
+@media (prefers-reduced-motion:reduce){.pk,.hl,.kglow{display:none}}
+</style>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#6e7681"/></marker></defs>
+<rect x="0.5" y="0.5" width="879.0" height="571.0" rx="16" class="bg"/>
+<rect x="24" y="84" width="592" height="164" rx="14" class="dz"/>
+<text x="44" y="108" class="h dzt">Discord server</text>
+<rect x="24" y="304" width="832" height="248" rx="14" class="mz"/>
+<text x="44" y="328" class="h" style="fill:#9198a1">your machine</text>
+<rect x="205" y="20" width="230" height="44" rx="22" class="card"/>
+<text x="320.0" y="47" text-anchor="middle"><tspan class="b">you</tspan><tspan class="m" dx="8">phone / desktop</tspan></text>
+<rect x="40" y="122" width="270" height="108" rx="10" class="card"/>
+<rect x="330" y="122" width="270" height="108" rx="10" class="card"/>
+<rect x="60" y="152" width="105" height="30" rx="15" class="chip"/><text x="112.5" y="172" class="ch" text-anchor="middle"><tspan class="hash">#</tspan>table</text>
+<text x="112.5" y="206" class="m" text-anchor="middle">talk</text>
+<rect x="185" y="152" width="105" height="30" rx="15" class="chip"/><text x="237.5" y="172" class="ch" text-anchor="middle"><tspan class="hash">#</tspan>orders</text>
+<text x="237.5" y="206" class="m" text-anchor="middle">forums</text>
+<rect x="347" y="152" width="74" height="30" rx="15" class="chip"/><text x="384.0" y="172" class="ch" text-anchor="middle"><tspan class="hash">#</tspan>served</text>
+<rect x="431" y="152" width="74" height="30" rx="15" class="chip"/><text x="468.0" y="172" class="ch" text-anchor="middle"><tspan class="hash">#</tspan>alerts</text>
+<rect x="515" y="152" width="74" height="30" rx="15" class="chip"/><text x="552.0" y="172" class="ch" text-anchor="middle"><tspan class="hash">#</tspan>panel</text>
+<text x="552.0" y="206" class="m" text-anchor="middle">live board</text>
+<rect x="664" y="126" width="176" height="100" rx="10" class="card"/>
+<text x="680" y="154" class="code">discord-hq apply</text>
+<text x="680" y="178" class="m">design.toml →</text>
+<text x="680" y="195" class="m">roles, channels,</text>
+<text x="680" y="212" class="m">permissions, webhooks</text>
+<rect x="40" y="342" width="270" height="60" rx="10" class="card"/>
+<text x="175" y="367" class="b" text-anchor="middle">waiter session</text>
+<text x="175" y="387" class="code" text-anchor="middle" style="fill:#9198a1;font-size:12.5px">tmux: waiter</text>
+<rect x="40" y="446" width="270" height="86" rx="10" class="kz"/>
+<text x="56" y="472"><tspan class="b">kitchens</tspan><tspan class="m" dx="8">tmux + git worktrees</tspan></text>
+<rect x="56" y="486" width="98" height="30" rx="8" class="kchip"/>
+<text x="105" y="506" class="code" text-anchor="middle">kitchen-a</text>
+<rect x="164" y="486" width="98" height="30" rx="8" class="kchip"/>
+<text x="213" y="506" class="code" text-anchor="middle">kitchen-b</text>
+<rect x="56" y="486" width="98" height="30" rx="8" class="kglow" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.3000;0.3278;0.3667;0.4111;1"/></rect>
+<rect x="164" y="486" width="98" height="30" rx="8" class="kglow" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.3000;0.3278;0.3667;0.4111;1"/></rect>
+<text x="286" y="506" class="b" text-anchor="middle" style="fill:#9198a1">…</text>
+<rect x="330" y="342" width="270" height="92" rx="10" class="card"/>
+<line x1="330" y1="388" x2="600" y2="388" class="sep"/>
+<text x="346" y="370" class="code">discord-hq hook</text>
+<text x="584" y="370" class="m" text-anchor="end">Notification / Stop</text>
+<text x="346" y="416" class="code">discord-hq watch</text>
+<text x="584" y="416" class="m" text-anchor="end">every 2 minutes</text>
+<rect x="664" y="342" width="176" height="92" rx="10" class="card"/>
+<text x="680" y="369" class="b">macOS notification</text>
+<text x="680" y="392" class="m">tmux attach command</text>
+<text x="680" y="410" class="m">on the clipboard</text>
+<path d="M260,64 V122" class="e" marker-end="url(#ah)"/>
+<path d="M175,402 V446" class="e" marker-end="url(#ah)"/>
+<path d="M310,489 H465 V434" class="e" marker-end="url(#ah)"/>
+<path d="M465,342 V230" class="e" marker-end="url(#ah)"/>
+<path d="M380,122 V64" class="e" marker-end="url(#ah)"/>
+<path d="M600,388 H664" class="e" marker-end="url(#ah)"/>
+<path d="M664,176 H616" class="e" marker-end="url(#ah)"/>
+<path d="M175,230 V342" class="e" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<text x="187" y="273" class="mb">bot</text>
+<text x="187" y="289" class="m">official Discord plugin</text>
+<text x="477" y="273" class="mb">webhooks</text>
+<text x="477" y="289" class="m">no bot token</text>
+<text x="187" y="429" class="m">dispatches</text>
+<text x="477" y="460" class="mb">reads</text>
+<text x="477" y="478" class="m">hook events, tmux screens,</text>
+<text x="477" y="495" class="m">transcripts, batch manifests</text>
+<text x="632.0" y="380" class="m" text-anchor="middle">also</text>
+<path d="M260,64 V122" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.0022;0.0222;0.1222;0.1922;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M260,64 V122" keyPoints="0;0;1;1" keyTimes="0;0.0222;0.1222;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.0072;0.0222;0.1222;0.1422;1"/></g>
+<path d="M175,230 V342" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.1133;0.1333;0.2222;0.2922;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M175,230 V342" keyPoints="0;0;1;1" keyTimes="0;0.1333;0.2222;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.1183;0.1333;0.2222;0.2422;1"/></g>
+<path d="M175,402 V446" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.2133;0.2333;0.3000;0.3700;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M175,402 V446" keyPoints="0;0;1;1" keyTimes="0;0.2333;0.3000;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.2183;0.2333;0.3000;0.3200;1"/></g>
+<path d="M310,489 H465 V434" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.3578;0.3778;0.5111;0.5811;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M310,489 H465 V434" keyPoints="0;0;1;1" keyTimes="0;0.3778;0.5111;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.3628;0.3778;0.5111;0.5311;1"/></g>
+<path d="M465,342 V230" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.5133;0.5333;0.6222;0.6922;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M465,342 V230" keyPoints="0;0;1;1" keyTimes="0;0.5333;0.6222;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.5183;0.5333;0.6222;0.6422;1"/></g>
+<path d="M600,388 H664" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.5133;0.5333;0.6000;0.6700;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M600,388 H664" keyPoints="0;0;1;1" keyTimes="0;0.5333;0.6000;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.5183;0.5333;0.6000;0.6200;1"/></g>
+<path d="M380,122 V64" class="hl" opacity="0"><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;.9;.9;0;0" keyTimes="0;0.6244;0.6444;0.7556;0.8256;1"/></path><g class="pk" opacity="0"><circle r="9" class="halo"/><circle r="4.5" class="dot"/><animateMotion dur="9.0s" repeatCount="indefinite" path="M380,122 V64" keyPoints="0;0;1;1" keyTimes="0;0.6444;0.7556;1" calcMode="spline" keySplines="0 0 1 1;.45 0 .55 1;0 0 1 1"/><animate attributeName="opacity" dur="9.0s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.6294;0.6444;0.7556;0.7756;1"/></g>
+</svg>
