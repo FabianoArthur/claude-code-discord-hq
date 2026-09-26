@@ -6,7 +6,7 @@
 
 > A documentação detalhada em `docs/` está em inglês. Este README é a versão completa em português.
 
-[![CI](https://github.com/Fabiano-Arthur/claude-code-discord-hq/actions/workflows/ci.yml/badge.svg)](https://github.com/Fabiano-Arthur/claude-code-discord-hq/actions/workflows/ci.yml)
+[![CI](https://github.com/FabianoArthur/claude-code-discord-hq/actions/workflows/ci.yml/badge.svg)](https://github.com/FabianoArthur/claude-code-discord-hq/actions/workflows/ci.yml)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
@@ -110,7 +110,7 @@ Requisitos: Python 3.11+, git, tmux e uma conta no Discord. No macOS você receb
 
 1. **Clone e instale:**
    ```sh
-   git clone https://github.com/Fabiano-Arthur/claude-code-discord-hq.git
+   git clone https://github.com/FabianoArthur/claude-code-discord-hq.git
    cd claude-code-discord-hq
    ./install.sh --dry-run   # mostra o que ele faria
    ./install.sh             # pede confirmação antes de gravar cada arquivo
