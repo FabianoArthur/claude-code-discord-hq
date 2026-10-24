@@ -30,8 +30,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-icon = ["pillow>=10,<13"]
-dev = ["pytest>=8,<10", "ruff>=0.6,<0.17", "pillow>=10,<13"]
+icon = ["pillow>=10,<14"]
+dev = ["pytest>=8,<10", "ruff>=0.6,<0.18", "pillow>=10,<14"]
 
 [project.scripts]
 discord-hq = "discord_hq.cli:main"
